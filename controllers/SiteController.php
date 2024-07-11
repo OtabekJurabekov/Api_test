@@ -70,11 +70,12 @@ class SiteController extends Controller
                 ->setUrl('http://13.49.68.228/api/v1/car-delete/' . $id . '/')
                 ->send();
             
-            $carsData = $response->content;
-            // Check if request was successful (status 200)
-           ;// Log response for debugging
-            if (isset($carsData['message'])) {
-                Yii::$app->session->setFlash('success', $carsData['message']);
+            $responseData = Json::decode($response->content);
+
+            if (isset($responseData['message'])) {
+                Yii::$app->session->setFlash('success', $responseData['message']);
+                return $this->redirect(['site/cars']);
+            } else {
             }
 
         } catch (\yii\httpclient\Exception $e) {
