@@ -30,13 +30,14 @@ COPY . /var/www/html
 
 # Set permissions for directories and files
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 *
+    && chmod -R 777 *
 
 # Switch to the www-data user
 USER www-data
 
 # Clear Composer cache
 RUN composer clear-cache
+
 RUN composer update
 # Install dependencies using Composer
 RUN composer install --no-interaction --no-plugins --no-scripts

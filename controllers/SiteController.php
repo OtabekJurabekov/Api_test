@@ -44,7 +44,7 @@ class SiteController extends Controller
         $httpClient = \Yii::$app->httpclient;
         $response = $httpClient->createRequest()
             ->setMethod('GET')
-            ->setUrl('http://192.168.1.11:8000/api/v1/cars/')
+            ->setUrl('http://13.49.68.228/api/v1/cars/')
             ->send();
 
         if ($response->isOk) {
@@ -67,13 +67,15 @@ class SiteController extends Controller
             // Send DELETE request to API endpoint
             $response = $client->createRequest()
                 ->setMethod('GET')
-                ->setUrl('http://192.168.1.11:8000/api/v1/car-delete/' . $id . '/')
+                ->setUrl('http://13.49.68.228/api/v1/car-delete/' . $id . '/')
                 ->send();
-    
+            
+            $carsData = $response->content;
             // Check if request was successful (status 200)
-            $carsData = Json::decode($response->content);
-
-            Yii::$app->session->setFlash('success', $carsData['message']);
+           ;// Log response for debugging
+            if (isset($carsData['message'])) {
+                Yii::$app->session->setFlash('success', $carsData['message']);
+            }
 
         } catch (\yii\httpclient\Exception $e) {
             Yii::$app->session->setFlash('error', 'Error communicating with API: ' . $e->getMessage());
@@ -88,7 +90,7 @@ class SiteController extends Controller
         try{
             $response = $client->createRequest()
             ->setMethod('GET')
-            ->setUrl('http://192.168.1.11:8000/api/v1/cars/' . $id)
+            ->setUrl('http://13.49.68.228/api/v1/cars/' . $id)
             ->send();
 
             $carData = Json::decode($response->content);
@@ -111,7 +113,7 @@ class SiteController extends Controller
             try {
                 $response = $client->createRequest()
                     ->setMethod('POST')
-                    ->setUrl('http://192.168.1.11:8000/api/v1/car-create/')
+                    ->setUrl('http://13.49.68.228/api/v1/car-create/')
                     ->setData([
                         'model' => $model->model,
                         'brand' => $model->brand,
@@ -148,7 +150,7 @@ class SiteController extends Controller
         // Fetch car details from the API
         $responseDetail = $client->createRequest()
             ->setMethod('GET')
-            ->setUrl('http://192.168.1.11:8000/api/v1/cars/' . $id)
+            ->setUrl('http://13.49.68.228/api/v1/cars/' . $id)
             ->send();
 
         // Decode the JSON response
@@ -173,7 +175,7 @@ class SiteController extends Controller
             // Send PUT request to update the car details
             $response = $client->createRequest()
                 ->setMethod('PUT')
-                ->setUrl('http://192.168.1.11:8000/api/v1/car-update/' . $id . "/") 
+                ->setUrl('http://13.49.68.228/api/v1/car-update/' . $id . "/") 
                 ->setData($requestData)
                 ->send();
 
