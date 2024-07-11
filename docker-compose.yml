@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yii2_app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    networks:
+      - app-network
+
+  webserver:
+    image: nginx:latest
+    container_name: yii2_webserver
+    restart: unless-stopped
+    ports:
+      - "192.168.1.8:9000:9000"  # Map container's port 9000 to host's port 9000 on IP 192.168.1.11
+    volumes:
+      - .:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: yii2_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: maxteach
+      MYSQL_DATABASE: for_api
+      MYSQL_USER: otabek
+      MYSQL_PASSWORD: maxteach
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
